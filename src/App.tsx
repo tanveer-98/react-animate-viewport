@@ -1,14 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import React, { useEffect } from "react";
+import { useAnimation,motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import "./styles.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const squareVariants = {
+  visible: { opacity: 1, scale: 4, transition: { duration: 1 } },
+  hidden: { opacity: 0, scale: 0 }
+};
 
-  return (
-    <div className="w-screen h-screen text-6xl flex justify-center items-center">
-      hello
-    </div>
-  )
+function Square() {
+  const controls = useAnimation();
+  const [ref,inView] = useInView();
+  
+  useEffect(()=>{
+    console.log('square useEffect called')
+    if(inView){
+      controls.start('visible')
+    }
+
+  },[controls,inView])
+
+  return <motion.div
+   className="square"
+   ref={ref}
+  variants={squareVariants}
+  initial="hidden"
+  // animate ={{scale: 2}}
+  animate={controls}
+  >
+
+
+  </motion.div>;
 }
-
-export default App
+export default function App() {
+  return (
+    <div className="App">
+      <h1 className="title">Scroll Down</h1>
+      <Square />
+      <Square />
+      <Square />
+      <Square />
+    </div>
+  );
+}
